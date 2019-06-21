@@ -3,7 +3,6 @@ import {
     Input,
     Tooltip,
     Icon,
-    Cascader,
     Select,
     Row,
     Col,
@@ -12,43 +11,10 @@ import {
     AutoComplete,
   } from 'antd';
   import React from 'react';
+  import './index.css';
+
   const { Option } = Select;
   const AutoCompleteOption = AutoComplete.Option;
-  
-  const residences = [
-    {
-      value: 'zhejiang',
-      label: 'Zhejiang',
-      children: [
-        {
-          value: 'hangzhou',
-          label: 'Hangzhou',
-          children: [
-            {
-              value: 'xihu',
-              label: 'West Lake',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: 'jiangsu',
-      label: 'Jiangsu',
-      children: [
-        {
-          value: 'nanjing',
-          label: 'Nanjing',
-          children: [
-            {
-              value: 'zhonghuamen',
-              label: 'Zhong Hua Men',
-            },
-          ],
-        },
-      ],
-    },
-  ];
   
   class WrappedRegisterForm extends React.Component {
     state = {
@@ -61,6 +27,7 @@ import {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.props.history.push('/dashboard')
         }
       });
     };
@@ -127,8 +94,11 @@ import {
         initialValue: '86',
       })(
         <Select style={{ width: 70 }}>
-          <Option value="86">+86</Option>
-          <Option value="87">+87</Option>
+          <Option value = "86">+86</Option>
+          <Option value = "87">+87</Option>
+          <Option value = "88">+88</Option>
+          <Option value = "89">+89</Option>
+          <Option value = "110">+110</Option>
         </Select>,
       );
   
@@ -137,7 +107,13 @@ import {
       ));
   
       return (
+        <Row type="flex" justify="space-around" align="middle">
+        <Col span={8}>
+          <img src = '/static/imgs/register.png' className = 'responsive-image' alt = ''></img>
+        </Col>
+        <Col span={8} >s
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+          <p className="register-form-title"> Register in QIndomitable Old Book System</p>
           <Form.Item label="E-mail">
             {getFieldDecorator('email', {
               rules: [
@@ -199,7 +175,7 @@ import {
           <Form.Item
             label={
               <span>
-                Nickname
+                NickName &nbsp;
                 <Tooltip title="What do you want others to call you?">
                   <Icon type="question-circle-o" />
                 </Tooltip>
@@ -207,22 +183,14 @@ import {
             }
           >
             {
-              getFieldDecorator('nickname', {
-              rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+              getFieldDecorator('nickName', {
+              rules: [ ],
               })(<Input />)           
             }
           </Form.Item>
-          <Form.Item label="Habitual Residence">
-            {getFieldDecorator('residence', {
-              initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-              rules: [
-                { type: 'array', required: true, message: 'Please select your habitual residence!' },
-              ],
-            })(<Cascader options={residences} />)}
-          </Form.Item>
           <Form.Item label="Phone Number">
             {getFieldDecorator('phone', {
-              rules: [{ required: true, message: 'Please input your phone number!' }],
+              rules: [],
             })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
           </Form.Item>
           <Form.Item label="Website">
@@ -232,7 +200,7 @@ import {
               <AutoComplete
                 dataSource={websiteOptions}
                 onChange={this.handleWebsiteChange}
-                placeholder="website"
+                placeholder="oracle"
               >
                 <Input />
               </AutoComplete>,
@@ -254,6 +222,8 @@ import {
             </Button>
           </Form.Item>
         </Form>
+        </Col>
+        </Row>
       );
     }
   }

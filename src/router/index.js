@@ -20,6 +20,8 @@ import NoMatch from '../components/nomatch/index';
 import BarChart from '../components/barchart/index';
 import LineChart from '../components/linechart/index';
 import RegisterForm from '../components/registerform/index';
+import SellBookForm from '../components/sellbookform/index';
+import BuyBookForm from '../components/buybookform/index';
 
 export const childRoutes = [
   {
@@ -39,13 +41,13 @@ export const childRoutes = [
         key: '10',
         name: 'Sell',
         url: '/personal/sell',
-        component: Card
+        component: SellBookForm
       },
       {
         key: '11',
         name: 'Buy',
         url: '/personal/buy',
-        component: Table
+        component: BuyBookForm
       }
     ]
   },

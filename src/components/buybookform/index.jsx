@@ -92,7 +92,7 @@ import {
       // about upload image
       const uploadImageProps = {
         name: 'file',
-        action: 'https://www.what.the.fuck',
+        action: 'https://www.what.the.fuck/',
         headers: {
           authorization: 'authorization-text',
         },
@@ -206,23 +206,23 @@ import {
             </Button>
           </Form.Item>
           
-          <Form.Item label="Origin Price">
-            {getFieldDecorator('originPrice', {
+          <Form.Item label="Lower Price">
+            {getFieldDecorator('lowerPrice', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input the origin price for the book',
+                  message: 'Please input the lower price for the book',
                 },
               ],
             })(<Input />)}
           </Form.Item>
 
-          <Form.Item label="Price for Sale">
-            {getFieldDecorator('sellPrice', {
+          <Form.Item label="Upper Price">
+            {getFieldDecorator('upperPrice', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input the sale price for the book',
+                  message: 'Please input the upper price for the book',
                 },
               ],
             })(<Input />)}
@@ -248,6 +248,6 @@ import {
     }
   }
   
-const SellBookForm = Form.create({ name: 'sellbook' })(WrappedForm);
+const BuyBookForm = Form.create({ name: 'buybook' })(WrappedForm);
 
-export default SellBookForm;
+export default BuyBookForm;
