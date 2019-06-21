@@ -1,7 +1,8 @@
-import './index.css'
-import React from 'react'
-import { Form, Icon, Input, Button } from 'antd'
-const FormItem = Form.Item
+import './index.css';
+import React from 'react';
+import { Form, Icon, Input, Button } from 'antd';
+import { Link } from "react-router-dom";
+const FormItem = Form.Item;
 
 class BasicLogin extends React.Component {
   handleSubmit = e => {
@@ -19,7 +20,7 @@ class BasicLogin extends React.Component {
       <div className="login-container">
         <div className="login-form-wrapper">
           <Form className="login-form" onSubmit={this.handleSubmit}>
-            <p className="login-form-title">系统登录</p>
+            <p className="login-form-title">QIndomitable Old Book System</p>
             <FormItem>
               {getFieldDecorator('userName', {
                 initialValue: 'admin',
@@ -52,8 +53,9 @@ class BasicLogin extends React.Component {
               htmlType="submit"
               className="login-form-button"
             >
-              登录
+              Sign in
             </Button>
+            Or <Link to = "/register">Register/Sign up Now</Link>
           </Form>
         </div>
       </div>

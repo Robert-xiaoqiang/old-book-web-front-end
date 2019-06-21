@@ -26,7 +26,6 @@ class SiderBar extends Component {
   }
   // 父组件属性改变时的钩子函数
   componentWillReceiveProps(nextProps) {
-    //   二级菜单发生变化时候this.props.hisotory
       Array.isArray(childRoutes) &&childRoutes.forEach(item => {
           Array.isArray(item.child) && item.child.forEach((node) => {
               if(node.url && isActive(node.url,this.props.history)){
@@ -45,6 +44,7 @@ class SiderBar extends Component {
         activeKey: e.key
     })
   }
+
   render() {
     let { activeKey, openKey } = this.state
     const _menuProcess = (nodes, pkey) => {
@@ -97,7 +97,7 @@ class SiderBar extends Component {
     return (
       <Sider trigger={null} collapsible collapsed={this.state.collapsed} id='sideId'>
         <Menu
-          theme="dark"
+          theme="light"
           mode={this.state.mode}
           defaultOpenKeys = {[openKey]}
           selectedKeys={[activeKey]}
@@ -110,4 +110,4 @@ class SiderBar extends Component {
   }
 }
 
-export default withRouter(SiderBar)
+export default withRouter(SiderBar);

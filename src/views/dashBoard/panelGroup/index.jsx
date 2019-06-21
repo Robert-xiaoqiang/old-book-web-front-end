@@ -11,7 +11,7 @@ class PanelGroup extends React.Component {
   render() {
     return (
       <Row gutter={32}>
-        <Col span="6" className="card-panel-col">
+        <Col span = { 6 } className="card-panel-col">
           <Card className="card-panel">
             <div className="card-panel-icon-wrapper">
               <i
@@ -25,7 +25,7 @@ class PanelGroup extends React.Component {
             </div>
           </Card>
         </Col>
-        <Col span="6" className="card-panel-col">
+        <Col span = { 6 } className="card-panel-col">
           <Card className="card-panel">
             <div className="card-panel-icon-wrapper">
               <i
@@ -39,7 +39,7 @@ class PanelGroup extends React.Component {
             </div>
           </Card>
         </Col>
-        <Col span="6" className="card-panel-col">
+        <Col span = { 6 } className="card-panel-col">
           <Card className="card-panel">
             <div className="card-panel-icon-wrapper">
               <i
@@ -53,7 +53,7 @@ class PanelGroup extends React.Component {
             </div>
           </Card>
         </Col>
-        <Col span="6" className="card-panel-col">
+        <Col span = { 6 } className="card-panel-col">
           <Card className="card-panel">
             <div className="card-panel-icon-wrapper">
               <i

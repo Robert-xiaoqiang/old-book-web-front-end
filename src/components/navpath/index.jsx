@@ -66,7 +66,7 @@ class NavPath extends React.Component {
           type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
-        <Breadcrumb style={{ margin: '24px 16px 0',display: 'inline-block'}}>
+        <Breadcrumb style={{ margin: '24px 16px 0', display: 'inline-block'}}>
           {extreaBreadcrumbItems}
         </Breadcrumb>
         <div className="drop-down">

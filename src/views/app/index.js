@@ -22,7 +22,7 @@ class App extends Component {
   }
   render() {
     return (
-        <Layout className="ant-layout-has-sider">
+        <Layout className = 'ant-layout-has-sider' theme = 'light'>
             <SiderBar checked={this.state.collapsed} />
             <Content>
                 <Header style={{ background: '#fff', padding: 0 }}>

@@ -10,15 +10,16 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 // const Table = asyncComponent(() => import('../components/table/index'))
 // const NoMatch = asyncComponent(() => import('../components/nomatch/index'))
 
-import Login from '../views/login/index'
-import Layout from '../views/app/index'
-import DashBoard from '../views/dashBoard/index'
-// import Page2 from '../views/page2/index'
-import Card from '../components/card/index'
-import Table from '../components/table/index'
-import NoMatch from '../components/nomatch/index'
-import BarChart from '../components/barchart/index'
-import LineChart from '../components/linechart/index'
+import Login from '../views/login/index';
+import Layout from '../views/app/index';
+import DashBoard from '../views/dashBoard/index';
+// import Page2 from '../views/page2/index';
+import Card from '../components/card/index';
+import Table from '../components/table/index';
+import NoMatch from '../components/nomatch/index';
+import BarChart from '../components/barchart/index';
+import LineChart from '../components/linechart/index';
+import RegisterForm from '../components/registerform/index';
 
 export const childRoutes = [
   {
@@ -31,7 +32,7 @@ export const childRoutes = [
   },
   {
     key: '1',
-    name: 'Personal Buy or Sell',
+    name: 'Personal',
     icon: 'user',
     child: [
       {
@@ -61,7 +62,7 @@ export const childRoutes = [
       },
       {
         key: '21',
-        name: 'The Guys Seeking for Help',
+        name: 'Help some Guys',
         url: '/market/sell',
         component: BarChart
       }
@@ -95,7 +96,8 @@ export default class Routers extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/login" component={Login} />
+          <Route exact path = "/login" component = { Login } />
+          <Route exact path = "/register" component = { RegisterForm } />
           <Redirect exact path="/" to="/login" />
           <Route component={Layout} />
           <Route path="*" component={NoMatch} />
