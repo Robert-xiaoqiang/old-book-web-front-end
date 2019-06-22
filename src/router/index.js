@@ -14,7 +14,7 @@ import Login from '../views/login/index';
 import Layout from '../views/app/index';
 import DashBoard from '../views/dashBoard/index';
 import Page2 from '../views/page2/index';
-import Card from '../components/card/index';
+import Cards from '../components/cards/index';
 import Table from '../components/table/index';
 import NoMatch from '../components/nomatch/index';
 import BarChart from '../components/barchart/index';
@@ -23,6 +23,10 @@ import RegisterForm from '../components/registerform/index';
 import SellBookForm from '../components/sellbookform/index';
 import BuyBookForm from '../components/buybookform/index';
 import BooksTable from '../components/bookstable/index';
+import SimpleBooksTable from '../components/simplebookstable/index';
+import ShoppingTable from '../components/shoppingtable/index';
+import HistoryTable from '../components/historytable/index';
+import CurrentChat from '../components/currentchat/index';
 
 export const childRoutes = [
   {
@@ -67,24 +71,32 @@ export const childRoutes = [
         key: '21',
         name: 'Help some Guys',
         url: '/market/sell',
-        component: BarChart
+        component: SimpleBooksTable
       }
     ]
   },
   {
     key: '3',
-    name: 'Shopping Cart',
-    icon: 'shopping',
-    url: '/shopping',
-    component: DashBoard,
+    name: 'Current Chat',
+    icon: 'chat',
+    url: '/chat',
+    component: CurrentChat,
     exactly: true
   },
   {
     key: '4',
+    name: 'Shopping Cart',
+    icon: 'shopping',
+    url: '/shopping',
+    component: ShoppingTable,
+    exactly: true
+  },
+  {
+    key: '5',
     name: 'My History Orders',
     icon: 'laptop',
     url: '/history',
-    component: DashBoard,
+    component: HistoryTable,
     exactly: true
   },
 ]
@@ -99,7 +111,8 @@ export const breadcrumbNameMap = {
     '/market/buy': 'MarketBuy',
     '/market/sell': 'MarketSell',
     '/shopping': 'Shopping',
-    '/history': 'History'
+    '/history': 'History',
+    '/chat': 'Chat'
   };
 
 
