@@ -13,7 +13,7 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Login from '../views/login/index';
 import Layout from '../views/app/index';
 import DashBoard from '../views/dashBoard/index';
-// import Page2 from '../views/page2/index';
+import Page2 from '../views/page2/index';
 import Card from '../components/card/index';
 import Table from '../components/table/index';
 import NoMatch from '../components/nomatch/index';
@@ -22,6 +22,7 @@ import LineChart from '../components/linechart/index';
 import RegisterForm from '../components/registerform/index';
 import SellBookForm from '../components/sellbookform/index';
 import BuyBookForm from '../components/buybookform/index';
+import BooksTable from '../components/bookstable/index';
 
 export const childRoutes = [
   {
@@ -60,7 +61,7 @@ export const childRoutes = [
         key: '20',
         name: 'Buy Old Books',
         url: '/market/buy',
-        component: LineChart
+        component: BooksTable
       },
       {
         key: '21',
@@ -72,6 +73,14 @@ export const childRoutes = [
   },
   {
     key: '3',
+    name: 'Shopping Cart',
+    icon: 'shopping',
+    url: '/shopping',
+    component: DashBoard,
+    exactly: true
+  },
+  {
+    key: '4',
     name: 'My History Orders',
     icon: 'laptop',
     url: '/history',
@@ -89,6 +98,7 @@ export const breadcrumbNameMap = {
     '/market': 'Market',
     '/market/buy': 'MarketBuy',
     '/market/sell': 'MarketSell',
+    '/shopping': 'Shopping',
     '/history': 'History'
   };
 

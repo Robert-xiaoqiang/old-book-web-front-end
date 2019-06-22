@@ -17,9 +17,13 @@ import {
   let id = 0;
 
   class WrappedForm extends React.Component {
-    state = {
-      imageBase64: ''
-    };
+    constructor(props) {
+      super(props);
+      this.state = {
+        imageBase64: ''
+      };
+    }
+  
   
     handleSubmit = e => {
       e.preventDefault();
