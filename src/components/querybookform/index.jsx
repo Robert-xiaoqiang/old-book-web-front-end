@@ -20,7 +20,8 @@ import {
     constructor(props) {
       super(props);
       this.state = {
-        handleQueryByParent: props.handleQueryByParent
+        handleQueryByParent: props.handleQueryByParent,
+        handleClearByParent: props.handleClearByParent
       };
     }
   
@@ -29,10 +30,17 @@ import {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.handleQueryByParent(values);
         }
       });
     };
-  
+    
+    handleClear = e => {
+      e.preventDefault();
+      this.props.form.resetFields();
+      this.handleClearByParent();      
+    }
+
     add = () => {
       const { form } = this.props;
       // can use data-binding to get
@@ -124,6 +132,11 @@ import {
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
               查询
+            </Button>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="danger" htmlType="submit" onClick = { this.handleClear }>
+              清空条件
             </Button>
           </Form.Item>
         </Form>

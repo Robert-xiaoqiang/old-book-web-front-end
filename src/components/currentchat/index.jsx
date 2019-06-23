@@ -14,13 +14,13 @@ const CommentList = ({ comments, guy }) => (
   />
 );
 
-const Editor = ({ onChange, onSubmit, submitting, value, guy }) => (
+const Editor = ({ onChange, onSubmit, value, guy }) => (
   <div>
     <Form.Item>
       <TextArea rows={4} onChange={onChange} value={value} />
     </Form.Item>
     <Form.Item>
-      <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
+      <Button htmlType="submit" onClick={onSubmit} type="primary">
         Send A Message to { guy }
       </Button>
     </Form.Item>
@@ -36,7 +36,6 @@ export default class CurrentChat extends React.Component {
         userName: 'xiaoqiang',
         guy: guy,
         comments: [],
-        submitting: false,
         value: '',
       };    
   }
@@ -46,71 +45,64 @@ export default class CurrentChat extends React.Component {
         this.socket = new WebSocket(api.websocket);
 
         // Connection opened
-        this.socket.addEventListener('open', event => {
+        this.socket.onopen = event => {
             this.socket.send(JSON.stringify({
                 from: this.state.userName,
                 to: this.state.guy,
                 content: ''
             }));
-        });
+        };
 
         // Listen for messages
-        this.socket.addEventListener('message', event => {
+        this.socket.onmessage = event => {
             console.log('Message from Server ', event.data);
             const {
                 from, to, content
-            } = event.data;
+            } = JSON.parse(event.data);
             this.setState({
                 comments: [
-                    {
-                    author: from,
-                    avatar: '/static/imgs/b1.png',
-                    content: <p>{content}</p>,
-                    datetime: moment().fromNow(),
-                    },
                     ...this.state.comments,
+                    {
+                        author: from,
+                        avatar: '/static/imgs/b1.png',
+                        content: <p>{content}</p>,
+                        datetime: moment().fromNow(),
+                    },
                 ]
             });
-        });
-  }
+        };
+    }
 
   handleSubmit = () => {
-    if(!this.state.guy) {
-        message.error('choose a guy to send message');
-        return;
-    }
+        if(!this.state.guy) {
+            message.error('choose a guy to send message');
+            return;
+        }
 
-    if (!this.state.value) {
-       message.error('without message');
-       return;
-    }
+        if (!this.state.value) {
+            message.error('without message');
+            return;
+        }
 
-    this.setState({
-      submitting: true,
-    });
-
-    this.socket.send(JSON.stringify({
-        from: this.state.userName,
-        to: this.state.guy,
-        content: this.state.value
-    }));
-
-    window.setTimeout(() => {
         this.setState({
-            submitting: false,
             value: '',
             comments: [
-              {
-                author: 'Han Solo',
-                avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                content: <p>{this.state.value}</p>,
-                datetime: moment().fromNow(),
-              },
-              ...this.state.comments,
+                ...this.state.comments,
+                {
+                    author: 'Han Solo',
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    content: <p>{this.state.value}</p>,
+                    datetime: moment().fromNow(),
+                }
             ],
-          })
-    }, 500);
-  };
+        })
+
+        this.socket.send(JSON.stringify({
+            from: this.state.userName,
+            to: this.state.guy,
+            content: this.state.value
+        }));
+    }
 
   handleChange = e => {
     this.setState({

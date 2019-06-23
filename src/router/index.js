@@ -78,7 +78,7 @@ export const childRoutes = [
   {
     key: '3',
     name: 'Current Chat',
-    icon: 'chat',
+    icon: 'wechat',
     url: '/chat',
     component: CurrentChat,
     exactly: true

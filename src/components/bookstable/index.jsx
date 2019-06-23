@@ -162,6 +162,10 @@ export default class BooksTable extends React.Component {
 
     }
 
+    handleClear = () => {
+
+    }
+
     handleOrderModalOk = (record) => {
       console.log(record, this.state);
       this.setState({
@@ -204,7 +208,8 @@ export default class BooksTable extends React.Component {
     render() {
         return (
             <div>
-            <QueryBookForm handleQueryByParent = { this.handleQuery } />
+            <QueryBookForm handleQueryByParent = { this.handleQuery }
+                           handleClearByParent = { this.handleClear } />
             <Table
             columns={this.state.columns}
             expandedRowRender={ record => {

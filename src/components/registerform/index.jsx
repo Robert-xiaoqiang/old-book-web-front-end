@@ -9,25 +9,51 @@ import {
     Checkbox,
     Button,
     AutoComplete,
+    Upload,
+    Card,
+    message
   } from 'antd';
   import React from 'react';
+  import Resizer from 'react-image-file-resizer';
   import './index.css';
-
+  import api from '../../api';
+  const { Meta } = Card;
   const { Option } = Select;
   const AutoCompleteOption = AutoComplete.Option;
   
   class WrappedRegisterForm extends React.Component {
     state = {
+      avatarBase64: '',
       confirmDirty: false,
-      autoCompleteResult: [],
+      autoCompleteResult: [ ],
     };
   
     handleSubmit = e => {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values);
-          this.props.history.push('/dashboard')
+          const body = {
+            userName: values.userName,
+            password: values.password,
+            email: values.email,
+            avatarBase64: this.state.avatarBase64
+          };
+
+          const bodyEncode = new URLSearchParams();
+            Object.keys(body).forEach(key=>{
+              bodyEncode.append(key, body[key]);
+          });
+          console.log(bodyEncode.toString());
+          fetch(api.register, {
+            method: 'POST',
+            body: bodyEncode,
+            credentials: 'include',
+            mode: 'cors'
+          })
+          .then(res => res.json())
+          .then(res => {
+            console.log(res);
+          })
         }
       });
     };
@@ -90,6 +116,42 @@ import {
           },
         },
       };
+      const formItemLayoutWithOutLabel = {
+        wrapperCol: {
+          xs: { span: 24, offset: 0 },
+          sm: { span: 20, offset: 4 },
+        },
+      };
+      // about upload image
+      const uploadImageProps = {
+        name: 'file',
+        action: 'https://www.what.the.fuck',
+        headers: {
+          authorization: 'authorization-text',
+        },
+        beforeUpload: (file) => {
+          let reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            this.setState({
+              avatarBase64: reader.result.split(',')[1]
+            });
+          };
+          return false;
+        },
+        onChange: (info) => {
+          if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+          } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+          }
+        },
+      };
+
+
       const prefixSelector = getFieldDecorator('prefix', {
         initialValue: '86',
       })(
@@ -105,15 +167,25 @@ import {
       const websiteOptions = autoCompleteResult.map(website => (
         <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
       ));
-  
+      
       return (
         <Row type="flex" justify="space-around" align="middle">
         <Col span={8}>
-          <img src = '/static/imgs/register.png' className = 'responsive-image' alt = ''></img>
+        <Card
+            bordered={false}
+            hoverable
+            style={{ width: 500, height: 500 }}
+            cover={<img alt='' src='/static/imgs/register.png' />}>
+            <Meta title='Register in QIndomitable Old Book System'
+                  description = {
+                  <div>
+                  <p>Reading is good for your brain</p>
+                  <p>Reading introduces you to new ideas and invites you to solve problems</p>
+                  <p>Reading improves your self-discipline and consistency</p></div> }/>
+        </Card>
         </Col>
-        <Col span={8} >s
+        <Col span={8} >
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-          <p className="register-form-title"> Register in QIndomitable Old Book System</p>
           <Form.Item label="E-mail">
             {getFieldDecorator('email', {
               rules: [
@@ -160,7 +232,8 @@ import {
             })(<Input.Password />)}
           </Form.Item>
           <Form.Item label="Confirm Password" hasFeedback>
-            {getFieldDecorator('confirm', {
+            {
+            getFieldDecorator('confirm', {
               rules: [
                 {
                   required: true,
@@ -170,8 +243,18 @@ import {
                   validator: this.compareToFirstPassword,
                 },
               ],
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+            })(<Input.Password onBlur={this.handleConfirmBlur} />)
+            }
           </Form.Item>
+
+          <Form.Item { ...tailFormItemLayout }>
+            <Upload {...uploadImageProps}>
+              <Button>
+                <Icon type="upload" /> Upload An Avatar
+              </Button>
+            </Upload>
+          </Form.Item> 
+
           <Form.Item
             label={
               <span>

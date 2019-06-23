@@ -31,6 +31,8 @@ import {
         if (!err) {
           console.log('Received values of form: ', values);
           console.log(this.state.imageBase64);
+
+          this.props.form.resetFields();
         }
       });
     };
