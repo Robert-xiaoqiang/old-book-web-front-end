@@ -1,7 +1,8 @@
 import './index.css';
 import React from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import { Link } from "react-router-dom";
+import api from '../../api';
 const FormItem = Form.Item;
 
 class BasicLogin extends React.Component {
@@ -9,8 +10,37 @@ class BasicLogin extends React.Component {
     e.preventDefault()
     this.props.form.validateFields((errs, values) => {
       if (!errs && values) {
-        console.log('values', values)
-        this.props.history.push('/dashboard')
+        const body = {
+          userName: values.userName,
+          password: values.password
+        };
+        console.log(body);
+        const bodyEncode = new URLSearchParams();
+          Object.keys(body).forEach(key=>{
+            bodyEncode.append(key, body[key]);
+        });
+        
+        fetch(api.login, {
+          method: 'POST',
+          body: bodyEncode,
+          credentials: 'include',
+          mode: 'cors'
+        })
+        .then(res => res.json())
+        .then(res => {
+            res = res.httpResponseBody;
+            if(res['status']) {
+              message.success('login successfully!');
+              window.localStorage.setItem('userName', values.userName);
+              window.localStorage.setItem('avatarURL', res['data']['avatarURL']);
+              window.setTimeout(() => {
+                this.props.history.push('/dashboad');  
+              }, 500);
+            } else {
+              message.error(res['message']);
+              this.props.form.resetFields();
+            }
+        });
       }
     })
   }

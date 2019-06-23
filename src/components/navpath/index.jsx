@@ -19,7 +19,7 @@ class NavPath extends React.Component {
     this.props.callbackParent(newState) //子组件调用父组件的callbackParent函数，传递新值到父组件
   }
   handleLoginOut = () => {
-    console.log('loginout')
+    window.localStorage.clear();
     this.props.history.replace('/login')
   }
   render() {
@@ -52,8 +52,7 @@ class NavPath extends React.Component {
           <a
             rel="noopener noreferrer"
             target="_blank"
-            href="https://github.com/Robert-xiaoqiang"
-          >
+            href="https://github.com/Robert-xiaoqiang">
             项目地址
           </a>
         </Menu.Item>
@@ -72,7 +71,8 @@ class NavPath extends React.Component {
         <div className="drop-down">
           <Dropdown overlay={menu}>
             <a className="antd-drown-link">
-              <Avatar shape="square" icon="user" />
+              <Avatar shape="square" icon='user' />
+              <Avatar shape="square" src={ window.localStorage.getItem('avatarURL') } />
             </a>
           </Dropdown>
         </div>

@@ -1,6 +1,6 @@
 import './index.css'
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { Layout } from 'antd'
 import { childRoutes } from '../../router/index'
 import SiderBar from '../../components/sidebar/index'
@@ -22,7 +22,11 @@ class App extends Component {
   }
   render() {
     return (
-        <Layout className = 'ant-layout-has-sider' theme = 'light'>
+        !window.localStorage.getItem('userName')
+        ?
+        (<Redirect to="/login" />)
+        :
+        (<Layout className = 'ant-layout-has-sider' theme = 'light'>
             <SiderBar checked={this.state.collapsed} />
             <Content>
                 <Header style={{ background: '#fff', padding: 0 }}>
@@ -56,8 +60,8 @@ class App extends Component {
                     </div>
                 </Content>
             </Content>
-        </Layout>
-    )
+        </Layout>)
+    );
   }
 }
 

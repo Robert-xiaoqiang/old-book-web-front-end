@@ -14,7 +14,6 @@ import {
     message
   } from 'antd';
   import React from 'react';
-  import Resizer from 'react-image-file-resizer';
   import './index.css';
   import api from '../../api';
   const { Meta } = Card;
@@ -38,12 +37,12 @@ import {
             email: values.email,
             avatarBase64: this.state.avatarBase64
           };
-
+          console.log(body);
           const bodyEncode = new URLSearchParams();
             Object.keys(body).forEach(key=>{
               bodyEncode.append(key, body[key]);
           });
-          console.log(bodyEncode.toString());
+          
           fetch(api.register, {
             method: 'POST',
             body: bodyEncode,
@@ -52,8 +51,18 @@ import {
           })
           .then(res => res.json())
           .then(res => {
-            console.log(res);
-          })
+              res = res.httpResponseBody;
+              if(res['status']) {
+                message.success('register successfully!');
+                window.localStorage.setItem('userName', values.userName);
+                window.setTimeout(() => {
+                  this.props.history.push('/login');  
+                }, 500);
+              } else {
+                message.error(res['message']);
+                this.props.form.resetFields();
+              }
+          });
         }
       });
     };
@@ -125,7 +134,7 @@ import {
       // about upload image
       const uploadImageProps = {
         name: 'file',
-        action: 'https://www.what.the.fuck',
+        action: 'https://what.the.fuck',
         headers: {
           authorization: 'authorization-text',
         },
