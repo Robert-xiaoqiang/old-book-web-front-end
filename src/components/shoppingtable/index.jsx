@@ -55,7 +55,7 @@ export default class ShoppingTable extends React.Component {
         // update state
     }
 
-    handleDeleteAll = () => {
+    handleCancel = () => {
         // post
         // updata state
     }
@@ -100,7 +100,7 @@ export default class ShoppingTable extends React.Component {
                 <Col span={6}>
                     <Button type = "primary" onClick = { this.handleConfirm }>Confirm</Button>
                     <Divider type="vertical" />
-                    <Button type = "danger" onClick = { this.handleDeleteAll }>Delete All Books</Button>
+                    <Button type = "danger" onClick = { this.handleDeleteAll }>Cancel it</Button>
                 </Col>
             </Row>
             </div>

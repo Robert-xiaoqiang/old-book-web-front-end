@@ -40,7 +40,9 @@ class BasicLogin extends React.Component {
               message.error(res['message']);
               this.props.form.resetFields();
             }
-        });
+        }).catch(err => {
+          message.error('request error!');
+        })
       }
     })
   }

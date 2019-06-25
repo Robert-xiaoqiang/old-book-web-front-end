@@ -62,6 +62,8 @@ import {
                 message.error(res['message']);
                 this.props.form.resetFields();
               }
+          }).catch(err => {
+            message.error('request error!');
           });
         }
       });
@@ -220,7 +222,7 @@ import {
                 },
                 {
                   required: true,
-                  message: 'Please input your E-mail!',
+                  message: 'Please input your UserName!',
                 },
               ],
             })(<Input />)  

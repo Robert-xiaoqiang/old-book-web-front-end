@@ -15,13 +15,11 @@ const data = [
                 bookInfo: {
                     bookName: 'Java Programming Language',
                     categories: [ 'CS', 'Mathematics', 'Physics'],
-                    originPrice: 32.0,
-                    sellPrice: 16.0,
-                    sellerName: 'Bruce Anc',
                     bookIntro: 'Java is not C++',
                     bookIntroURL: '',
                     bookImageURL: '/static/imgs/b1.png'
                 },
+                originPrice: 32.0,
                 sellerName: 'Xiaoqiang',
                 sellPrice: 10.0,
             },
@@ -41,13 +39,11 @@ const data = [
                 bookInfo: {
                     bookName: 'Java Programming Language',
                     categories: [ 'CS', 'Mathematics', 'Physics'],
-                    originPrice: 32.0,
-                    sellPrice: 16.0,
-                    sellerName: 'Bruce Anc',
                     bookIntro: 'Java is not C++',
                     bookIntroURL: '',
                     bookImageURL: '/static/imgs/b1.png'
                 },
+                originPrice: 32.0,
                 sellerName: 'Xiaoqiang',
                 sellPrice: 10.0,
             },

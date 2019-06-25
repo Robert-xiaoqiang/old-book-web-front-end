@@ -11,7 +11,8 @@ import {
   } from 'antd';
   import React from 'react';
   import './index.css';
-
+  
+  const { TextArea } = Input;
   const { Option } = Select;
   
   let id = 0;
@@ -179,7 +180,9 @@ import {
           </Form.Item>
 
           <Form.Item label="Book Introduction">
-            {getFieldDecorator('bookIntroduction', {
+            {
+            getFieldDecorator('bookIntroduction', {
+              initialValue: 'Input the Book Introduction at Least 20 characters',
               rules: [
                 {
                   required: true,
@@ -190,7 +193,8 @@ import {
                   message: 'Please input enough information for this book 20 characters',
                 },
               ],
-            })(<Input />)}
+            })(<TextArea />)
+            }
           </Form.Item>
 
           <Form.Item label="Book Outer URL">
