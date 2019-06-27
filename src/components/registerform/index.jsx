@@ -11,7 +11,8 @@ import {
     AutoComplete,
     Upload,
     Card,
-    message
+    message,
+    Spin
   } from 'antd';
   import React from 'react';
   import './index.css';
@@ -25,9 +26,13 @@ import {
       avatarBase64: '',
       confirmDirty: false,
       autoCompleteResult: [ ],
+      loading: false
     };
   
     handleSubmit = e => {
+      this.setState({
+        loading: true
+      });
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
@@ -53,6 +58,9 @@ import {
             message.error('request error!');
           })
           .then(res => res.json())
+          .catch(err => {
+            message.error('request error!');
+          })
           .then(res => {
               res = res.httpResponseBody;
               if(res['status']) {
@@ -65,6 +73,10 @@ import {
                 message.error(res['message']);
                 this.props.form.resetFields();
               }
+          }).then(() => {
+            this.setState({
+              loading: false
+            })
           });
         }
       });
@@ -181,144 +193,147 @@ import {
       ));
       
       return (
-        <Row type="flex" justify="space-around" align="middle">
-        <Col span={8}>
-        <Card
-            bordered={false}
-            hoverable
-            style={{ width: 500, height: 500 }}
-            cover={<img alt='' src='/static/imgs/register.png' />}>
-            <Meta title='Register in QIndomitable Old Book System'
-                  description = {
-                  <div>
-                  <p>Reading is good for your brain</p>
-                  <p>Reading introduces you to new ideas and invites you to solve problems</p>
-                  <p>Reading improves your self-discipline and consistency</p></div> }/>
-        </Card>
-        </Col>
-        <Col span={8} >
-        <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-          <Form.Item label="E-mail">
-            {getFieldDecorator('email', {
-              rules: [
-                {
-                  type: 'email',
-                  message: 'The input is not valid E-mail!',
-                },
-                {
-                  required: true,
-                  message: 'Please input your E-mail!',
-                },
-              ],
-            })(<Input />)}
-          </Form.Item>
-          
-          <Form.Item label = "UserName">
-          {
-            getFieldDecorator('userName', {
-              rules: [
-                {
-                  min: 5,
-                  message: 'UserName at least 5 characters',
-                },
-                {
-                  required: true,
-                  message: 'Please input your UserName!',
-                },
-              ],
-            })(<Input />)  
-          }
-          </Form.Item>
-
-          <Form.Item label="Password" hasFeedback>
-            {getFieldDecorator('password', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-                {
-                  validator: this.validateToNextPassword,
-                },
-              ],
-            })(<Input.Password />)}
-          </Form.Item>
-          <Form.Item label="Confirm Password" hasFeedback>
+        <div>
+          { this.state.loading ? <Spin /> : null }
+          <Row type="flex" justify="space-around" align="middle">
+          <Col span={8}>
+          <Card
+              bordered={false}
+              hoverable
+              style={{ width: 500, height: 500 }}
+              cover={<img alt='' src='/static/imgs/register.png' />}>
+              <Meta title='Register in QIndomitable Old Book System'
+                    description = {
+                    <div>
+                    <p>Reading is good for your brain</p>
+                    <p>Reading introduces you to new ideas and invites you to solve problems</p>
+                    <p>Reading improves your self-discipline and consistency</p></div> }/>
+          </Card>
+          </Col>
+          <Col span={8} >
+          <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+            <Form.Item label="E-mail">
+              {getFieldDecorator('email', {
+                rules: [
+                  {
+                    type: 'email',
+                    message: 'The input is not valid E-mail!',
+                  },
+                  {
+                    required: true,
+                    message: 'Please input your E-mail!',
+                  },
+                ],
+              })(<Input />)}
+            </Form.Item>
+            
+            <Form.Item label = "UserName">
             {
-            getFieldDecorator('confirm', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please confirm your password!',
-                },
-                {
-                  validator: this.compareToFirstPassword,
-                },
-              ],
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)
+              getFieldDecorator('userName', {
+                rules: [
+                  {
+                    min: 5,
+                    message: 'UserName at least 5 characters',
+                  },
+                  {
+                    required: true,
+                    message: 'Please input your UserName!',
+                  },
+                ],
+              })(<Input />)  
             }
-          </Form.Item>
+            </Form.Item>
 
-          <Form.Item { ...tailFormItemLayout }>
-            <Upload {...uploadImageProps}>
-              <Button>
-                <Icon type="upload" /> Upload An Avatar
+            <Form.Item label="Password" hasFeedback>
+              {getFieldDecorator('password', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input your password!',
+                  },
+                  {
+                    validator: this.validateToNextPassword,
+                  },
+                ],
+              })(<Input.Password />)}
+            </Form.Item>
+            <Form.Item label="Confirm Password" hasFeedback>
+              {
+              getFieldDecorator('confirm', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please confirm your password!',
+                  },
+                  {
+                    validator: this.compareToFirstPassword,
+                  },
+                ],
+              })(<Input.Password onBlur={this.handleConfirmBlur} />)
+              }
+            </Form.Item>
+
+            <Form.Item { ...tailFormItemLayout }>
+              <Upload {...uploadImageProps}>
+                <Button>
+                  <Icon type="upload" /> Upload An Avatar
+                </Button>
+              </Upload>
+            </Form.Item> 
+
+            <Form.Item
+              label={
+                <span>
+                  NickName &nbsp;
+                  <Tooltip title="What do you want others to call you?">
+                    <Icon type="question-circle-o" />
+                  </Tooltip>
+                </span>
+              }
+            >
+              {
+                getFieldDecorator('nickName', {
+                rules: [ ],
+                })(<Input />)           
+              }
+            </Form.Item>
+            <Form.Item label="Phone Number">
+              {getFieldDecorator('phone', {
+                rules: [],
+              })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+            </Form.Item>
+            <Form.Item label="Website">
+              {getFieldDecorator('website', {
+                rules: [ ],
+              })(
+                <AutoComplete
+                  dataSource={websiteOptions}
+                  onChange={this.handleWebsiteChange}
+                  placeholder="oracle"
+                >
+                  <Input />
+                </AutoComplete>,
+              )}
+            </Form.Item>
+
+            <Form.Item {...tailFormItemLayout}>
+              {getFieldDecorator('agreement', {
+                valuePropName: 'checked',
+              })(
+                <Checkbox>
+                  I have read the <a>agreement</a>
+                </Checkbox>,
+              )}
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+              <Button type="primary" htmlType="submit">
+                Register
               </Button>
-            </Upload>
-          </Form.Item> 
-
-          <Form.Item
-            label={
-              <span>
-                NickName &nbsp;
-                <Tooltip title="What do you want others to call you?">
-                  <Icon type="question-circle-o" />
-                </Tooltip>
-              </span>
-            }
-          >
-            {
-              getFieldDecorator('nickName', {
-              rules: [ ],
-              })(<Input />)           
-            }
-          </Form.Item>
-          <Form.Item label="Phone Number">
-            {getFieldDecorator('phone', {
-              rules: [],
-            })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
-          </Form.Item>
-          <Form.Item label="Website">
-            {getFieldDecorator('website', {
-              rules: [ ],
-            })(
-              <AutoComplete
-                dataSource={websiteOptions}
-                onChange={this.handleWebsiteChange}
-                placeholder="oracle"
-              >
-                <Input />
-              </AutoComplete>,
-            )}
-          </Form.Item>
-
-          <Form.Item {...tailFormItemLayout}>
-            {getFieldDecorator('agreement', {
-              valuePropName: 'checked',
-            })(
-              <Checkbox>
-                I have read the <a>agreement</a>
-              </Checkbox>,
-            )}
-          </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-              Register
-            </Button>
-          </Form.Item>
-        </Form>
-        </Col>
-        </Row>
+            </Form.Item>
+          </Form>
+          </Col>
+          </Row>
+        </div>
       );
     }
   }

@@ -1,33 +1,9 @@
-import { Table, Button, Divider, Tag, Modal, Radio, Cascader, Card, Calendar } from 'antd';
+import { Table, Button, Tag, message } from 'antd';
 import React from 'react';
 import Cards from '../cards/index';
-
+import api from '../../api';
 import './index.css';
 
-const data = [
-  {
-    key: 1,
-    bookName: 'Java Programming Language',
-    categories: [ 'CS', 'Mathematics', 'Physics'],
-    originPrice: 32.0,
-    sellPrice: 16.0,
-    sellerName: 'Bruce Anc',
-    bookIntro: 'Java is not C++',
-    bookIntroURL: '',
-    bookImageURL: '/static/imgs/b1.png'
-  },
-  {
-    key: 2,
-    bookName: 'Haskell Programming Language',
-    categories: [ 'CS', 'Mathematics', 'Biology'],
-    originPrice: 32.0,
-    sellPrice: 16.0,
-    sellerName: 'Xiaoqiang',
-    bookIntro: 'FP is futher',
-    bookIntroURL: '',
-    bookImageURL: '/static/imgs/b2.png'
-  }
-];
 
 export default class SimpleBooksTable extends React.Component {
     constructor(props) {
@@ -36,25 +12,25 @@ export default class SimpleBooksTable extends React.Component {
             { title: 'Book Name', dataIndex: 'bookName', key: 'bookName' },
             {
               title: 'Categories',
-              dataIndex: 'categories',
-              key: 'categories',
+              dataIndex: 'bookCategoryInfos',
+              key: 'bookCategoryInfos',
               width: 100,
-              render: categories => (
+              render: bookCategoryInfos => (
                 <span>
-                  {categories.map(category => {
+                  {bookCategoryInfos.map(categoryInfo => {
                     let color = 'green';
                     return (
-                      <Tag color={color} key={category}>
-                        {category.toUpperCase()}
+                      <Tag color={color} key={categoryInfo.categoryName}>
+                        {categoryInfo.categoryName.toUpperCase()}
                       </Tag>
                     );
                   })}
                 </span>
               ),
             },
-            { title: 'Origin Price', dataIndex: 'originPrice', key: 'originPrice', width: 100, sorter: (a, b) => a.originPrice - b.originPrice},
-            { title: 'Price for Sale', dataIndex: 'sellPrice', key: 'sellPrice', width: 100, sorter: (a, b) => a.sellPrice - b.sellPrice},
-            { title: 'Seller Name', dataIndex: 'sellerName', key: 'sellerName' },
+            { title: 'Lower Price', dataIndex: 'lowerPrice', key: 'lowerPrice', width: 100, sorter: (a, b) => a.originPrice - b.originPrice},
+            { title: 'Upper Price', dataIndex: 'upperPrice', key: 'upperPrice', width: 100, sorter: (a, b) => a.sellPrice - b.sellPrice},
+            { title: 'Buyer Name', dataIndex: 'buyerName', key: 'buyerName' },
             {
                 title: 'Action',
                 key: 'action',
@@ -68,16 +44,56 @@ export default class SimpleBooksTable extends React.Component {
             }
         ];
         this.state = {
-            data: data,
+            userName: window.localStorage.getItem('userName'),
+            data: [ ],
             columns: columns
         }
     }
 
     handleChat = record => {
-
+      window.localStorage.setItem('guy', record.buyerName);
+      this.props.history.push('/chat');
+    }
+    
+    componentDidMount() {
+      const body = {
+        userName: this.state.userName
+      };
+      const bodyEncode = new URLSearchParams();
+        Object.keys(body).forEach(key=>{
+          bodyEncode.append(key, body[key]);
+      });
+      
+      fetch(api.allbookbuys, {
+        method: 'POST',
+        body: bodyEncode,
+        credentials: 'include',
+        mode: 'cors'
+      })
+      .catch(err => {
+        console.log(err);
+        message.error('request error!');
+      })
+      .then(res => res.json())
+      .then(res => {
+        res = res.httpResponseBody;
+        console.log(res);
+        if(res.status) {
+          this.setState({
+            data: res.data.map(ele => {
+              const temp = ele.bookInfo;
+              delete ele.bookInfo;
+              return { ...ele, ...temp };
+            })
+          });
+        } else {
+          message.error(res.message);
+        }
+      });
     }
 
     render() {
+        console.log(this.state);
         return (
             <Table
             columns={this.state.columns}
@@ -89,7 +105,7 @@ export default class SimpleBooksTable extends React.Component {
                     );
                 }
             }
-            dataSource={data}/>
+            dataSource={this.state.data}/>
         );
     }
 }

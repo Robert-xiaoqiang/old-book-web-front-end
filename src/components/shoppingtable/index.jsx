@@ -22,7 +22,7 @@ export default class ShoppingTable extends React.Component {
                 render: (text, record) => {
                     return (
                       <span>
-                        <Button type="danger" onClick={ () => this.handleDeleteOne(record) }>Delete the Book</Button>
+                        <Button type="danger" onClick={ () => this.handleDeleteOne(record) }>Remove From Cart</Button>
                       </span>  
                     );
                 }
@@ -133,7 +133,8 @@ export default class ShoppingTable extends React.Component {
 
     handleCancel = () => {
         const body = {
-            userName: this.state.userName
+            userName: this.state.userName,
+            orderInfoKey: this.state.key
         };
         const bodyEncode = new URLSearchParams();
             Object.keys(body).forEach(key=>{
@@ -166,7 +167,8 @@ export default class ShoppingTable extends React.Component {
 
     handleConfirm = () => {
         const body = {
-            userName: this.state.userName
+            userName: this.state.userName,
+            orderInfoKey: this.state.key
         };
         const bodyEncode = new URLSearchParams();
             Object.keys(body).forEach(key=>{

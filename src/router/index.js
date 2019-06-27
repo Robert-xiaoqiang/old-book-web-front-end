@@ -27,7 +27,8 @@ import SimpleBooksTable from '../components/simplebookstable/index';
 import ShoppingTable from '../components/shoppingtable/index';
 import HistoryTable from '../components/historytable/index';
 import CurrentChat from '../components/currentchat/index';
-
+import BookSellHistory from '../components/booksellhistory/index';
+import BookBuyHistory from '../components/bookbuyhistory/index';
 export const childRoutes = [
   {
     key: '0',
@@ -48,12 +49,26 @@ export const childRoutes = [
         url: '/personal/sell',
         component: SellBookForm
       },
+
       {
         key: '11',
         name: 'Buy',
         url: '/personal/buy',
         component: BuyBookForm
-      }
+      },
+
+      {
+        key: '12',
+        name: 'Sell History',
+        url: '/personal/sellhistory',
+        component: BookSellHistory
+      },
+      {
+        key: '13',
+        name: 'Buy History',
+        url: '/personal/buyhistory',
+        component: BookBuyHistory
+      },
     ]
   },
   {
@@ -107,6 +122,8 @@ export const breadcrumbNameMap = {
     '/personal': 'Personal',
     '/personal/sell': 'PersonalSell',
     '/personal/buy': 'PersonalBuy',
+    '/personal/sellhistory': 'PersonalSellHistory',
+    '/personal/buyhistory': 'PersonalBuyHistory',
     '/market': 'Market',
     '/market/buy': 'MarketBuy',
     '/market/sell': 'MarketSell',

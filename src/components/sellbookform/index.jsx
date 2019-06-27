@@ -85,6 +85,10 @@ import {
             message.error('request error!');
           })
           .then(res => res.json())
+          .catch(err => {
+            console.log(err);
+            message.error('request error!');
+          })
           .then(res => {
             res = res.httpResponseBody;
             if(res.status) {

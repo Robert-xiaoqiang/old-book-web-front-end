@@ -56,27 +56,25 @@ class BasicLogin extends React.Component {
             <p className="login-form-title">QIndomitable Old Book System</p>
             <FormItem>
               {getFieldDecorator('userName', {
-                initialValue: 'admin',
+                initialValue: 'wxqwxq',
                 rules: [
                   { required: true, message: 'Please input your username!' }
                 ]
               })(
                 <Input
                   prefix={<Icon type="user" style={{ fontSize: 13 }} />}
-                  placeholder="Username"
                 />
               )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('password', {
-                initialValue: 'admin',
+                initialValue: '123',
                 rules: [
                   { required: true, message: 'please input your password!' }
                 ]
               })(
                 <Input
                   prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                  placeholder="Password"
                   type="password"
                 />
               )}
