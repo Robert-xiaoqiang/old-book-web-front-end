@@ -28,8 +28,8 @@ export default class BookBuyHistory extends React.Component {
                 </span>
               ),
             },
-            { title: 'Lower Price', dataIndex: 'lowerPrice', key: 'lowerPrice', width: 100, sorter: (a, b) => a.originPrice - b.originPrice},
-            { title: 'Upper Sale', dataIndex: 'upperPrice', key: 'upperPrice', width: 100, sorter: (a, b) => a.sellPrice - b.sellPrice},
+            { title: 'Lower Price', dataIndex: 'lowerPrice', key: 'lowerPrice', sorter: (a, b) => a.originPrice - b.originPrice},
+            { title: 'Upper Sale', dataIndex: 'upperPrice', key: 'upperPrice', sorter: (a, b) => a.sellPrice - b.sellPrice},
             {
                 title: 'Action',
                 key: 'action',
@@ -40,7 +40,7 @@ export default class BookBuyHistory extends React.Component {
                       </span>  
                     );
                 }
-              }
+            }
         ];
           this.state = {
             userName: window.localStorage.getItem('userName'),

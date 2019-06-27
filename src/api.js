@@ -1,5 +1,5 @@
-const httpHost = 'http://localhost:8080'
-const wsHost = 'ws://localhost:8080'
+const httpHost = 'http://68.183.162.213:8080'
+const wsHost = 'ws://68.183.162.213:8080'
 const api = {
     websocket: wsHost + '/api/websocket',
 

@@ -95,7 +95,7 @@ class SiderBar extends Component {
     }
     const menu = _menuProcess(childRoutes)
     return (
-      <Sider trigger={null} collapsible collapsed={this.state.collapsed} id='sideId'>
+      <Sider collapsible collapsed={this.state.collapsed} id='sideId'>
         <Menu
           theme="light"
           mode={this.state.mode}
