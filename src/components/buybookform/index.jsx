@@ -11,6 +11,7 @@ import {
   } from 'antd';
   import React from 'react';
   import './index.css';
+  import api from '../../api';
 
   const { Option } = Select;
   
@@ -29,10 +30,48 @@ import {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values);
-          console.log(this.state.imageBase64);
-
-          this.props.form.resetFields();
+          if (!err) {
+            // console.log('Received values of form: ', values);
+            const body = {
+              userName: this.state.userName,
+              bookName: values.bookName,
+              bookIntro: values.bookIntro,
+              bookIntroURL: values.bookIntroURL,
+              bookImageBase64: this.state.imageBase64,
+              bookCategoryKeys: values.names.map(ele => Number(ele)),
+              lowerPrice: values.lowerPrice,
+              upperPrice: values.upperPrice
+            }
+            console.log(body);
+            const bodyEncode = new URLSearchParams();
+              Object.keys(body).forEach(key=>{
+                bodyEncode.append(key, body[key]);
+            });
+            
+            fetch(api.uploadbooksell, {
+              method: 'POST',
+              body: bodyEncode,
+              credentials: 'include',
+              mode: 'cors'
+            })
+            .catch(err => {
+              console.log(err);
+              message.error('request error!');
+            })
+            .then(res => res.json())
+            .then(res => {
+              res = res.httpResponseBody;
+              if(res.status) {
+                message.success('upload successfuly!');
+                window.setTimeout(() => {
+                  this.props.history.push('/market/sell');
+                }, 500);
+              } else {
+                message.error(res.message);
+                this.props.form.resetFields();
+              }
+            });
+          }
         }
       });
     };

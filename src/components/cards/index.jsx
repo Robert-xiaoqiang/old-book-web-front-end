@@ -23,16 +23,16 @@ export default class Cards extends React.Component {
             <Card
               bordered={false}
               hoverable
-              style={{ width: 240, height: 240 }}
-              cover={<img alt='' src={ this.state.bookImageURL } />}>
+              style={{ width: 300, height: 300 }}
+              cover={<img alt='' src={ this.state.bookImageURL } width='150' height='250' />}>
               <Meta title="Book Cover" description={ this.state.bookIntroURL } />
-            </Card>
+            </Card> 
           </Col>
-          <Col span={8}>
-            <Card title = {<p>Book Intro(<a href = {this.state.bookIntroURL}>detail</a>)</p>}
+          <Col span={8} offset={2}>
+            <Card title = {<p>Book Intro(<a href = {this.state.bookIntroURL} target = '_blank'>detail</a>)</p>}
                   bordered={false}
                   hoverable
-                  style={{ width: 240, height: 240 }}>
+                  style={{ width: 300, height: 300 }}>
               <p style={{ margin: 0 }}>{this.state.bookIntro}</p>
             </Card>
           </Col>

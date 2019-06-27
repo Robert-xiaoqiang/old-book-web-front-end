@@ -1,58 +1,7 @@
-import { Table, Button, Row, Col, Card, List, Icon, Avatar } from 'antd';
+import { Table, Button, Row, Col, Tag, List, Icon, message } from 'antd';
 import React from 'react';
-
+import api from '../../api';
 import './index.css';
-
-const data = [
-  {
-    key: 1,
-    orderTimestamp: '2019-06-22',
-    buyerName: 'Xiaoqiang',
-    totalPrice: '10000.233',
-    orderDetails: [
-        {
-            bookSellInfo: {
-                bookInfo: {
-                    bookName: 'Java Programming Language',
-                    categories: [ 'CS', 'Mathematics', 'Physics'],
-                    bookIntro: 'Java is not C++',
-                    bookIntroURL: '',
-                    bookImageURL: '/static/imgs/b1.png'
-                },
-                originPrice: 32.0,
-                sellerName: 'Xiaoqiang',
-                sellPrice: 10.0,
-            },
-            tradePlace: '浙江杭州',
-            tradeTimestamp: '2019-09-09'
-        }
-    ]
-  },
-  {
-    key: 2,
-    orderTimestamp: '2019-06-22',
-    buyerName: 'Xiaoqiang',
-    totalPrice: '10000.233',
-    orderDetails: [
-        {
-            bookSellInfo: {
-                bookInfo: {
-                    bookName: 'Java Programming Language',
-                    categories: [ 'CS', 'Mathematics', 'Physics'],
-                    bookIntro: 'Java is not C++',
-                    bookIntroURL: '',
-                    bookImageURL: '/static/imgs/b1.png'
-                },
-                originPrice: 32.0,
-                sellerName: 'Xiaoqiang',
-                sellPrice: 10.0,
-            },
-            tradePlace: '浙江杭州',
-            tradeTimestamp: null
-        }
-    ]
-  }
-];
 
 const IconText = ({ type, text }) => (
     <span>
@@ -68,33 +17,135 @@ export default class HistoryTable extends React.Component {
             { title: 'Order Timestamp', dataIndex: 'orderTimestamp', key: 'orderTimestamp' },
             { title: 'Buyer Name', dataIndex: 'buyerName', key: 'buyerName' },
             { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice' },
+            { title: 'Order State', dataIndex: 'orderState', key: 'orderState',
+              render: (text, record) => {
+                  if(record.orderState === 0) {
+                      return <Tag color = 'red'>Shopping</Tag>
+                  } else if(record.orderState === 1) {
+                    return <Tag color = 'cyan'>Canceled</Tag>
+                  } else {
+                    return <Tag color = 'lime'>Finished</Tag>
+                  }
+              }
+            },
             {
                 title: 'Action',
                 key: 'action',
                 render: (text, record) => {
                     return (
                       <span>
-                        <Button type="danger" onClick={ () => this.handleDeleteOne(record) }>Delete the Order</Button>
+                        <Button disabled = { record.orderState === 0 } type="danger" onClick={ () => this.handleDeleteOne(record) }>Delete the History</Button>
                       </span>  
                     );
                 }
             }
         ];
         this.state = {
-            data: data,
+            userName: localStorage.getItem('userName'),
+            data: [ ],
             columns: columns
         }
     }
 
+    fetchHistory = () => {
+        // console.log('Received values of form: ', values);
+        const body = {
+            userName: this.state.userName,
+        };
+        const bodyEncode = new URLSearchParams();
+            Object.keys(body).forEach(key=>{
+            bodyEncode.append(key, body[key]);
+        });
+        
+        fetch(api.userorderinfos, {
+            method: 'POST',
+            body: bodyEncode,
+            credentials: 'include',
+            mode: 'cors'
+        })
+        .catch(err => {
+            console.log(err);
+            message.error('request error!');
+        })
+        .then(res => res.json())
+        .then(res => {
+            res = res.httpResponseBody;
+            if(res.status) {
+                this.setState({
+                    data: res.data
+                });
+            } else {
+                message.error(res.message);
+            }
+        });
+    }
+    componentDidMount() {
+        this.fetchHistory();
+    }
     handleDeleteOne = record => {
-        // post
-        // update state
+        const body = {
+            orderInfoKey: record.key
+        };
+        const bodyEncode = new URLSearchParams();
+            Object.keys(body).forEach(key=>{
+            bodyEncode.append(key, body[key]);
+        });
+        
+        fetch(api.deleteorderinfo, {
+            method: 'POST',
+            body: bodyEncode,
+            credentials: 'include',
+            mode: 'cors'
+        })
+        .catch(err => {
+            console.log(err);
+            message.error('request error!');
+        })
+        .then(res => res.json())
+        .then(res => {
+            res = res.httpResponseBody;
+            if(res.status) {
+                message.success('delete successfully!');
+            } else {
+                message.error(res.message);
+            }
+        })
+        .then(() => {
+            this.fetchHistory();
+        });
     }
 
     handleDeleteAll = () => {
-        // post
-        // updata state
-        // refresh
+        const body = {
+            userName: this.state.userName
+        };
+        const bodyEncode = new URLSearchParams();
+            Object.keys(body).forEach(key=>{
+            bodyEncode.append(key, body[key]);
+        });
+        
+        fetch(api.deleteuserorderinfos, {
+            method: 'POST',
+            body: bodyEncode,
+            credentials: 'include',
+            mode: 'cors'
+        })
+        .catch(err => {
+            console.log(err);
+            message.error('request error!');
+        })
+        .then(res => res.json())
+        .then(res => {
+            res = res.httpResponseBody;
+            if(res.status) {
+                message.success('delete successfully!');
+            } else {
+                message.error(res.message);
+            }
+        })
+        .then(() => {
+            this.fetchHistory();
+        });
     }
 
     render() {
@@ -123,10 +174,10 @@ export default class HistoryTable extends React.Component {
                             const {
                                 sellerName,
                                 sellPrice
-                            } = item.bookSellInfo;
+                            } = item.bookSellResponseBody;
                             const {
                                 bookName, bookImageURL, bookIntroURL
-                            } = item.bookSellInfo.bookInfo;
+                            } = item.bookSellResponseBody.bookInfo;
                             return (<List.Item
                                 key={bookName}
                                 extra={
@@ -152,10 +203,10 @@ export default class HistoryTable extends React.Component {
                     );
                 }
             }
-            dataSource={data}/>
+            dataSource={this.state.data}/>
             <Row type="flex" justify="end">
                 <Col span={4}>
-                    <Button type = "danger" onClick = { this.handleDeleteAll }>Delete All Orders</Button>
+                    <Button type = "danger" onClick = { this.handleDeleteAll }>Delete All History</Button>
                 </Col>
             </Row>
             </div>

@@ -14,7 +14,7 @@ class BasicLogin extends React.Component {
           userName: values.userName,
           password: values.password
         };
-        console.log(body);
+
         const bodyEncode = new URLSearchParams();
           Object.keys(body).forEach(key=>{
             bodyEncode.append(key, body[key]);
@@ -26,6 +26,9 @@ class BasicLogin extends React.Component {
           credentials: 'include',
           mode: 'cors'
         })
+        .catch(err => {
+          message.error('request error!');
+        })
         .then(res => res.json())
         .then(res => {
             res = res.httpResponseBody;
@@ -35,14 +38,12 @@ class BasicLogin extends React.Component {
               window.localStorage.setItem('avatarURL', res['data']['avatarURL']);
               window.setTimeout(() => {
                 this.props.history.push('/dashboad');  
-              }, 500);
+              }, 200);
             } else {
               message.error(res['message']);
               this.props.form.resetFields();
             }
-        }).catch(err => {
-          message.error('request error!');
-        })
+        });
       }
     })
   }

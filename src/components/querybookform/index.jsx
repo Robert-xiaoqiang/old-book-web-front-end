@@ -11,6 +11,7 @@ import {
   } from 'antd';
   import React from 'react';
   import './index.css';
+  import api from '../../api';
 
   const { Option } = Select;
   
@@ -19,17 +20,37 @@ import {
   class WrappedForm extends React.Component {
     constructor(props) {
       super(props);
+      this.handleQueryByParent = props.handleQueryByParent;
+      this.handleClearByParent = props.handleClearByParent;
       this.state = {
-        handleQueryByParent: props.handleQueryByParent,
-        handleClearByParent: props.handleClearByParent
+        bookCategoryInfos: [ ],
       };
     }
   
+    componentDidMount() {
+      fetch(api.allcategories, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors'
+      })
+      .catch(err => {
+        message.error('request error!')
+      })
+      .then(res => res.json())
+      .then(res => {
+        res = res.httpResponseBody;
+        if(res.status) {
+          this.setState({
+            bookCategoryInfos: res.data
+          });
+        }
+      });
+    }
+
     handleQuery = e => {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values);
           this.handleQueryByParent(values);
         }
       });
@@ -95,13 +116,14 @@ import {
           {
             getFieldDecorator(`names[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
-            initialValue: '86',
+            initialValue: String(this.state.bookCategoryInfos[0].key),
             rules: [ ],
           })( <Select style={{ width: 200 }} >
-                <Option value="86">TP计算机自动化</Option>
-                <Option value="87">农学</Option>
-                <Option value="88">茶学</Option>
-                <Option value="89">蛤学</Option>
+                {
+                  this.state.bookCategoryInfos.map((element, index, arr) => (
+                    <Option key = { element.key } value = { String(element.key) }> { element.categoryName } </Option>
+                  ))
+                }
               </Select>)
           }
         </Form.Item>
@@ -131,12 +153,12 @@ import {
 
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              查询
+              Query
             </Button>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="danger" htmlType="submit" onClick = { this.handleClear }>
-              清空条件
+              Clear Conditions
             </Button>
           </Form.Item>
         </Form>

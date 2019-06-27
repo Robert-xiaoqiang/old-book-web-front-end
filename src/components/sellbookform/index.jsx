@@ -7,11 +7,13 @@ import {
     Col,
     Button,
     message,
-    Upload
+    Upload,
+    Spin
   } from 'antd';
   import React from 'react';
   import './index.css';
-  
+  import api from '../../api';
+
   const { TextArea } = Input;
   const { Option } = Select;
   
@@ -21,19 +23,83 @@ import {
     constructor(props) {
       super(props);
       this.state = {
-        imageBase64: ''
+        userName: window.localStorage.getItem('userName'),
+        bookimageBase64: '',
+        bookCategoryInfos: [ ],
+        loading: false,
       };
     }
   
-  
+    componentDidMount() {
+      fetch(api.allcategories, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors'
+      })
+      .catch(err => {
+        message.error('request error!')
+      })
+      .then(res => res.json())
+      .then(res => {
+        res = res.httpResponseBody;
+        if(res.status) {
+          this.setState({
+            bookCategoryInfos: res.data
+          });
+        }
+      });
+    }
+
     handleSubmit = e => {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values);
-          console.log(this.state.imageBase64);
-
-          this.props.form.resetFields();
+          // console.log('Received values of form: ', values);
+          this.setState({
+            loading: true
+          });
+          const body = {
+            userName: this.state.userName,
+            bookName: values.bookName,
+            bookIntro: values.bookIntro,
+            bookIntroURL: values.bookIntroURL,
+            bookImageBase64: this.state.bookImageBase64,
+            bookCategoryKeys: values.names.map(ele => Number(ele)),
+            originPrice: values.originPrice,
+            sellPrice: values.sellPrice
+          }
+          console.log(body);
+          const bodyEncode = new URLSearchParams();
+            Object.keys(body).forEach(key=>{
+              bodyEncode.append(key, body[key]);
+          });
+          
+          fetch(api.uploadbooksell, {
+            method: 'POST',
+            body: bodyEncode,
+            credentials: 'include',
+            mode: 'cors'
+          })
+          .catch(err => {
+            console.log(err);
+            message.error('request error!');
+          })
+          .then(res => res.json())
+          .then(res => {
+            res = res.httpResponseBody;
+            if(res.status) {
+              message.success('upload successfuly!');             
+              window.setTimeout(() => {
+                this.setState({
+                  loading: false
+                });
+                this.props.history.push('/market/buy');
+              }, 200);
+            } else {
+              message.error(res.message);
+              this.props.form.resetFields();
+            }
+          });
         }
       });
     };
@@ -108,14 +174,14 @@ import {
           reader.readAsDataURL(file);
           reader.onload = () => {
             this.setState({
-              imageBase64: reader.result
+              bookImageBase64: reader.result.split(',')[1]
             });
           };
           return false;
         },
         onChange: (info) => {
           if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
+            // console.log(info.file, info.fileList);
           }
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
@@ -126,7 +192,7 @@ import {
       };
 
       // about categoroes
-      getFieldDecorator('keys', { initialValue: [] });
+      getFieldDecorator('keys', { initialValue: [ ] });
       const keys = getFieldValue('keys');
       const categoryItems = keys.map((k, index) => (
         <Form.Item
@@ -138,7 +204,7 @@ import {
           {
             getFieldDecorator(`names[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
-            initialValue: '86',
+            initialValue: String(this.state.bookCategoryInfos[0].key),
             rules: [
               {
                 required: true,
@@ -146,11 +212,12 @@ import {
                 message: "Please input categories names or delete this field",
               },
             ],
-          })( <Select style={{ width: 200 }} >
-                <Option value="86">TP计算机自动化</Option>
-                <Option value="87">农学</Option>
-                <Option value="88">茶学</Option>
-                <Option value="89">蛤学</Option>
+            })( <Select style={{ width: 200 }} >
+                {
+                  this.state.bookCategoryInfos.map((element, index, arr) => (
+                    <Option key = { element.key } value = { String(element.key) }> { element.categoryName } </Option>
+                  ))
+                }
               </Select>)
           }
           {
@@ -167,6 +234,7 @@ import {
       return (
         <Row type="flex" justify="space-between" align="bottom">
         <Col span = { 10 } >
+        { this.state.loading ? <Spin /> : null }
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           <Form.Item label="Book Name">
             {getFieldDecorator('bookName', {
@@ -181,7 +249,7 @@ import {
 
           <Form.Item label="Book Introduction">
             {
-            getFieldDecorator('bookIntroduction', {
+            getFieldDecorator('bookIntro', {
               initialValue: 'Input the Book Introduction at Least 20 characters',
               rules: [
                 {
@@ -204,6 +272,10 @@ import {
                   required: true,
                   message: 'Please input the outer URL for the book',
                 },
+                {
+                  pattern: /^https?:/,
+                  message: 'HTTP or HTTPS only'
+                }
               ],
             })(<Input />)}
           </Form.Item>
@@ -241,7 +313,7 @@ import {
           <Form.Item { ...formItemLayoutWithOutLabel }>
             <Upload {...uploadImageProps}>
               <Button>
-                <Icon type="upload" /> Click to Upload
+                <Icon type="upload" /> Upload the Book Cover
               </Button>
             </Upload>
           </Form.Item> 

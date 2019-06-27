@@ -1,7 +1,29 @@
+const httpHost = 'http://localhost:8080'
+const wsHost = 'ws://localhost:8080'
 const api = {
-    websocket: 'ws://localhost:8080/api/websocket',
-    register: 'http://localhost:8080/api/register',
-    login: 'http://localhost:8080/api/login'
+    websocket: wsHost + '/api/websocket',
+
+    register: httpHost + '/api/register',
+    login: httpHost + '/api/login',
+    allcategories: httpHost + '/api/allcategories',
+    uploadbooksell: httpHost + '/api/uploadbooksell',
+    querybooksell: httpHost + '/api/querybooksell',
+    uploadbookbuy: httpHost + '/api/uploadbookbuy',
+    uploadorderdetail: httpHost + '/api/uploadorderdetail',
+    deleteorderdetail: httpHost + '/api/deleteorderdetail',
+    confirmorderinfo: httpHost + '/api/confirmorderinfo',
+    cancelorderinfo: httpHost + '/api/cancelorderinfo',
+    shoppingcart: httpHost + '/api/shoppingcart',
+    userorderinfos: httpHost + '/api/userorderinfos',
+    deleteuserorderinfos: httpHost + '/api/deleteuserorderinfos',
+    deleteorderinfo: httpHost + '/api/deleteorderinfo',
+
+    userbooksells: httpHost + '/api/userbooksells',
+    deleteuserbooksells: httpHost + '/api/deleteuserbooksells',
+    deletebooksell: httpHost + '/api/deletebooksell',
+    userbookbuys: httpHost + '/api/userbookbuys',
+    deleteuserbookbuys: httpHost + '/api/deleteuserbookbuys',
+    deletebookbuy: httpHost + '/api/deletebookbuy'
 };
 
 export default api

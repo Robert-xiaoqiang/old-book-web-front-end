@@ -37,7 +37,7 @@ import {
             email: values.email,
             avatarBase64: this.state.avatarBase64
           };
-          console.log(body);
+
           const bodyEncode = new URLSearchParams();
             Object.keys(body).forEach(key=>{
               bodyEncode.append(key, body[key]);
@@ -49,6 +49,9 @@ import {
             credentials: 'include',
             mode: 'cors'
           })
+          .catch(err => {
+            message.error('request error!');
+          })
           .then(res => res.json())
           .then(res => {
               res = res.httpResponseBody;
@@ -57,13 +60,11 @@ import {
                 window.localStorage.setItem('userName', values.userName);
                 window.setTimeout(() => {
                   this.props.history.push('/login');  
-                }, 500);
+                }, 200);
               } else {
                 message.error(res['message']);
                 this.props.form.resetFields();
               }
-          }).catch(err => {
-            message.error('request error!');
           });
         }
       });
